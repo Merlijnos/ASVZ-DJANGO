@@ -1,0 +1,26 @@
+[
+    {
+        "status": true,
+        "timestamp": "2024-10-14T10:00:00Z"
+    },
+    {
+        "status": false,
+        "timestamp": "2024-10-14T10:05:00Z"
+    },
+    {
+        "status": true,
+        "timestamp": "2024-10-14T10:10:00Z"
+    },
+    {
+        "status": false,
+        "timestamp": "2024-10-14T10:15:00Z"
+    },
+    {
+        "status": true,
+        "timestamp": "2024-10-14T10:20:00Z"
+    },
+    {
+        "status": false,
+        "timestamp": "2024-10-14T10:25:00Z"
+    }
+]

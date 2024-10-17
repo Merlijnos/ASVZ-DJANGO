@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ASVZ_APP',  # Voeg deze regel toe
+    'ASVZ_APP',
 ]
 
 MIDDLEWARE = [
