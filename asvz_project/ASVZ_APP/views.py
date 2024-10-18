@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render
 from django.conf import settings
 from .models import SondepompStatus
+from datetime import datetime
 
 def dashboard(request):
     # Debug print-statements
@@ -22,7 +23,8 @@ def dashboard(request):
     # Zet de mockdata om naar SondepompStatus-objecten
     statuses = []
     for item in mock_data:
-        status = SondepompStatus(status=item['status'], timestamp=item['timestamp'])
+        timestamp = datetime.fromisoformat(item['timestamp'].replace("Z", "+00:00"))  # Converteer naar datetime
+        status = SondepompStatus(status=item['status'], timestamp=timestamp)
         statuses.append(status)
 
     return render(request, 'dashboard.html', {'statuses': statuses})
