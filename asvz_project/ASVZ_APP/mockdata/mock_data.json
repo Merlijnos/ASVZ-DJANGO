@@ -1,26 +1,38 @@
 [
     {
         "status": true,
-        "timestamp": "2024-10-14T10:00:00Z"
+        "timestamp": "2024-10-14T10:00:00Z",
+        "message": "Systeem gestart",
+        "device_id": "Device123"
     },
     {
         "status": false,
-        "timestamp": "2024-10-14T10:05:00Z"
+        "timestamp": "2024-10-14T10:05:00Z",
+        "message": "Systeem gestopt",
+        "device_id": "Device123"
     },
     {
         "status": true,
-        "timestamp": "2024-10-14T10:10:00Z"
+        "timestamp": "2024-10-14T10:10:00Z",
+        "message": "Systeem herstart",
+        "device_id": "Device456"
     },
     {
         "status": false,
-        "timestamp": "2024-10-14T10:15:00Z"
+        "timestamp": "2024-10-14T10:15:00Z",
+        "message": "Fout opgetreden",
+        "device_id": "Device456"
     },
     {
         "status": true,
-        "timestamp": "2024-10-14T10:20:00Z"
+        "timestamp": "2024-10-14T10:20:00Z",
+        "message": "Systeem weer actief",
+        "device_id": "Device123"
     },
     {
         "status": false,
-        "timestamp": "2024-10-14T10:25:00Z"
+        "timestamp": "2024-10-14T10:25:00Z",
+        "message": "Systeem afgesloten",
+        "device_id": "Device123"
     }
 ]

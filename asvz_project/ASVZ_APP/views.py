@@ -24,7 +24,7 @@ def dashboard(request):
     statuses = []
     for item in mock_data:
         timestamp = datetime.fromisoformat(item['timestamp'].replace("Z", "+00:00"))  # Converteer naar datetime
-        status = SondepompStatus(status=item['status'], timestamp=timestamp)
+        status = SondepompStatus(status=item['status'], timestamp=timestamp, message=item['message'], device_id=item['device_id'])
         statuses.append(status)
 
     return render(request, 'dashboard.html', {'statuses': statuses})

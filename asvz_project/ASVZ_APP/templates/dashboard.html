@@ -5,20 +5,25 @@
     <title>Sondepomp Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 light-mode" id="body">
     <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">Sondepomp Dashboard</h1>
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <h1 class="text-4xl font-bold mb-6 text-center text-blue-600">Sondepomp Dashboard</h1>
+        
+        <div class="mb-4 text-right">
+            <button id="toggleMode" class="bg-blue-500 text-white px-4 py-2 rounded">Schakel naar Donker Modus</button>
+        </div>
+
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-6 transition-transform transform hover:scale-105 dark:bg-gray-700">
             <table class="min-w-full">
-                <thead class="bg-gray-200">
+                <thead class="bg-blue-500 text-white dark:bg-blue-600">
                     <tr>
-                        <th class="py-2 px-4 text-left">Status</th>
-                        <th class="py-2 px-4 text-left">Tijdstip</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                        <th class="py-3 px-4 text-left">Tijdstip</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for status in statuses %}
-                    <tr class="hover:bg-gray-100 transition duration-200">
+                    <tr class="hover:bg-blue-100 dark:hover:bg-blue-600 transition duration-200">
                         <td class="py-2 px-4">{{ status.status|yesno:"Aan,Uit" }}</td>
                         <td class="py-2 px-4">{{ status.timestamp|date:"D, d M Y H:i:s" }}</td>
                     </tr>
@@ -26,6 +31,42 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 dark:bg-gray-700">
+            <table class="min-w-full">
+                <thead class="bg-green-500 text-white dark:bg-green-600">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Bericht</th>
+                        <th class="py-3 px-4 text-left">Apparaat ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for status in statuses %}
+                    <tr class="hover:bg-green-100 dark:hover:bg-green-600 transition duration-200">
+                        <td class="py-2 px-4">{{ status.message }}</td>
+                        <td class="py-2 px-4">{{ status.device_id }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <script>
+        const toggleButton = document.getElementById('toggleMode');
+        const body = document.getElementById('body');
+
+        toggleButton.addEventListener('click', () => {
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                toggleButton.textContent = 'Schakel naar Licht Modus';
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                toggleButton.textContent = 'Schakel naar Donker Modus';
+            }
+        });
+    </script>
 </body>
 </html>
