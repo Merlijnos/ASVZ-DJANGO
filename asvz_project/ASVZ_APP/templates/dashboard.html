@@ -1,21 +1,71 @@
 <!DOCTYPE html>
-<html lang="nl">
+c<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <title>Sondepomp Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body.light-mode {
+            background-color: #f1f1f1;
+            color: #4a90e2;
+        }
+        body.dark-mode {
+            background-color: #1a202c;
+            color: #4a90e2;
+        }
+        .table-header {
+            background-color: #4a90e2;
+        }
+        .table-header-dark {
+            background-color: #2c5282;
+        }
+        .table-light {
+            background-color: #ececec;
+            color: #333;
+        }
+        .table-dark {
+            background-color: #2d3748; 
+            color: #edf2f4; 
+        }
+      
+        .hover-light:hover {
+            background-color: #e2e8f0;
+        }
+        .hover-dark:hover {
+            background-color: #4a5568;
+        }
+        .button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #357ABD;
+        }
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 light-mode" id="body">
+<body class="light-mode" id="body">
     <div class="container mx-auto p-6">
-        <h1 class="text-4xl font-bold mb-6 text-center text-blue-600">Sondepomp Dashboard</h1>
+        <h1 class="text-4xl mb-6 text-center">Sondepomp Dashboard</h1>
         
         <div class="mb-4 text-right">
-            <button id="toggleMode" class="bg-blue-500 text-white px-4 py-2 rounded">Schakel naar Donker Modus</button>
+            <button id="toggleMode" class="button">
+                <i class="fas fa-moon" id="icon"></i>
+            </button>
         </div>
 
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-6 transition-transform transform hover:scale-105 dark:bg-gray-700">
-            <table class="min-w-full">
-                <thead class="bg-blue-500 text-white dark:bg-blue-600">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-6 transition-transform transform hover:scale-105">
+            <table class="min-w-full table-light">
+                <thead class="table-header text-white">
                     <tr>
                         <th class="py-3 px-4 text-left">Status</th>
                         <th class="py-3 px-4 text-left">Tijdstip</th>
@@ -23,7 +73,7 @@
                 </thead>
                 <tbody>
                     {% for status in statuses %}
-                    <tr class="hover:bg-blue-100 dark:hover:bg-blue-600 transition duration-200">
+                    <tr class="hover-light">
                         <td class="py-2 px-4">{{ status.status|yesno:"Aan,Uit" }}</td>
                         <td class="py-2 px-4">{{ status.timestamp|date:"D, d M Y H:i:s" }}</td>
                     </tr>
@@ -32,9 +82,9 @@
             </table>
         </div>
 
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105 dark:bg-gray-700">
-            <table class="min-w-full">
-                <thead class="bg-green-500 text-white dark:bg-green-600">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+            <table class="min-w-full table-light">
+                <thead class="table-header text-white">
                     <tr>
                         <th class="py-3 px-4 text-left">Bericht</th>
                         <th class="py-3 px-4 text-left">Apparaat ID</th>
@@ -42,7 +92,7 @@
                 </thead>
                 <tbody>
                     {% for status in statuses %}
-                    <tr class="hover:bg-green-100 dark:hover:bg-green-600 transition duration-200">
+                    <tr class="hover-light">
                         <td class="py-2 px-4">{{ status.message }}</td>
                         <td class="py-2 px-4">{{ status.device_id }}</td>
                     </tr>
@@ -55,16 +105,35 @@
     <script>
         const toggleButton = document.getElementById('toggleMode');
         const body = document.getElementById('body');
+        const icon = document.getElementById('icon');
 
         toggleButton.addEventListener('click', () => {
             if (body.classList.contains('light-mode')) {
                 body.classList.remove('light-mode');
                 body.classList.add('dark-mode');
-                toggleButton.textContent = 'Schakel naar Licht Modus';
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                document.querySelectorAll('.table-light').forEach(table => {
+                    table.classList.remove('table-light');
+                    table.classList.add('table-dark');
+                });
+                document.querySelectorAll('.hover-light').forEach(row => {
+                    row.classList.remove('hover-light');
+                    row.classList.add('hover-dark');
+                });
             } else {
                 body.classList.remove('dark-mode');
                 body.classList.add('light-mode');
-                toggleButton.textContent = 'Schakel naar Donker Modus';
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                document.querySelectorAll('.table-dark').forEach(table => {
+                    table.classList.remove('table-dark');
+                    table.classList.add('table-light');
+                });
+                document.querySelectorAll('.hover-dark').forEach(row => {
+                    row.classList.remove('hover-dark');
+                    row.classList.add('hover-light');
+                });
             }
         });
     </script>
