@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-c<html lang="nl">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <title>Sondepomp Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body {
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
         body.light-mode {
             background-color: #f1f1f1;
             color: #4a90e2;
@@ -16,6 +19,7 @@ c<html lang="nl">
         }
         .table-header {
             background-color: #4a90e2;
+            transition: background-color 0.5s ease;
         }
         .table-header-dark {
             background-color: #2c5282;
@@ -23,10 +27,12 @@ c<html lang="nl">
         .table-light {
             background-color: #ececec;
             color: #333;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
         .table-dark {
             background-color: #2d3748; 
             color: #edf2f4; 
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
       
         .hover-light:hover {
@@ -49,7 +55,7 @@ c<html lang="nl">
         }
         h1 {
             font-family: 'Arial', sans-serif;
-            font-weight: 600;
+            font-weight: 1000;
         }
     </style>
 </head>
@@ -136,6 +142,30 @@ c<html lang="nl">
                 });
             }
         });
+
+        function fetchStatuses() {
+            fetch('/api/statuses/')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('tbody');
+                    tbody.innerHTML = ''; // Maak de huidige inhoud leeg
+                    data.forEach(status => {
+                        const row = document.createElement('tr');
+                        row.className = 'hover-light';
+                        row.innerHTML = `
+                            <td class="py-2 px-4">${status.status ? 'Aan' : 'Uit'}</td>
+                            <td class="py-2 px-4">${status.timestamp}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching statuses:', error));
+        }
+
+        // Haal de status elke 5 seconden op
+        setInterval(fetchStatuses, 5000);
+        // Initial fetch
+        fetchStatuses();
     </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ import json
 import os
 from django.shortcuts import render
 from django.conf import settings
+from django.http import JsonResponse
 from .models import SondepompStatus
 from datetime import datetime
 
@@ -28,3 +29,16 @@ def dashboard(request):
         statuses.append(status)
 
     return render(request, 'dashboard.html', {'statuses': statuses})
+
+def get_statuses(request):
+    statuses = SondepompStatus.objects.all()
+    data = [
+        {
+            'status': status.status,
+            'timestamp': status.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            'message': status.message,
+            'device_id': status.device_id
+        }
+        for status in statuses
+    ]
+    return JsonResponse(data, safe=False)
