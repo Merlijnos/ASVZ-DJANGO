@@ -16,10 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from ASVZ_APP.views import dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', dashboard, name='dashboard'),
-    path('dashboard/', dashboard, name='dashboard'),
+    path('', include('ASVZ_APP.urls')),  # Zorg ervoor dat je de app-URL's opneemt
 ]

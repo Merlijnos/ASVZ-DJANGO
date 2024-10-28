@@ -63,7 +63,10 @@
     <div class="container mx-auto p-6">
         <h1 class="text-4xl mb-6 text-center">Sondepomp Dashboard</h1>
         
-        <div class="mb-4 text-right">
+        <div class="mb-4 flex justify-between items-center">
+            <a href="{% url 'logout' %}" class="button">
+                <i class="fas fa-sign-out-alt"></i> Uitloggen
+            </a>
             <button id="toggleMode" class="button">
                 <i class="fas fa-moon" id="icon"></i>
             </button>
@@ -142,30 +145,6 @@
                 });
             }
         });
-
-        function fetchStatuses() {
-            fetch('/api/statuses/')
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.querySelector('tbody');
-                    tbody.innerHTML = ''; // Maak de huidige inhoud leeg
-                    data.forEach(status => {
-                        const row = document.createElement('tr');
-                        row.className = 'hover-light';
-                        row.innerHTML = `
-                            <td class="py-2 px-4">${status.status ? 'Aan' : 'Uit'}</td>
-                            <td class="py-2 px-4">${status.timestamp}</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-                })
-                .catch(error => console.error('Error fetching statuses:', error));
-        }
-
-        // Haal de status elke 5 seconden op
-        setInterval(fetchStatuses, 5000);
-        // Initial fetch
-        fetchStatuses();
     </script>
 </body>
 </html>

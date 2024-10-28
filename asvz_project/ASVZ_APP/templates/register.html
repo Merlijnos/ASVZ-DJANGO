@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Registreren</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 2px solid #d1d5db;
+            transition: border-color 0.3s ease, outline 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        .help-text {
+            display: none;
+        }
+        .field:focus-within .help-text {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-4xl mb-6 text-center font-bold text-gray-800">Registreren</h1>
+        
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden p-6 max-w-md mx-auto">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-4 field">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <p class="mt-1 text-xs text-gray-500 help-text">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="mt-1 text-xs text-red-500">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">Registreren</button>
+            </form>
+            <p class="mt-4 text-center text-sm">Heb je al een account? <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Inloggen</a></p>
+        </div>
+    </div>
+</body>
+</html>
