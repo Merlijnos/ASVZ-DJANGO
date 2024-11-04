@@ -60,6 +60,7 @@
     </style>
 </head>
 <body class="light-mode" id="body">
+    {% csrf_token %}
     <div class="container mx-auto p-6">
         <h1 class="text-4xl mb-6 text-center">Sondepomp Dashboard</h1>
         
@@ -111,6 +112,8 @@
         </div>
     </div>
 
+    <div id="notifications" class="fixed top-4 right-4 z-50"></div>
+
     <script>
         const toggleButton = document.getElementById('toggleMode');
         const body = document.getElementById('body');
@@ -145,6 +148,83 @@
                 });
             }
         });
+
+        function checkNotifications() {
+            fetch('/api/notifications/')
+                .then(response => response.json())
+                .then(notifications => {
+                    notifications.forEach(notification => {
+                        showNotification(notification);
+                    });
+                });
+        }
+
+        function showNotification(notification) {
+            const notificationElement = document.createElement('div');
+            notificationElement.className = 'bg-red-500 text-white p-4 rounded-lg shadow-lg mb-4 flex justify-between items-center';
+            notificationElement.setAttribute('data-notification-id', notification.id);
+            notificationElement.innerHTML = `
+                <div>
+                    <p class="font-bold">Foutmelding - ${notification.device_id}</p>
+                    <p>${notification.message}</p>
+                    <p class="text-sm">${notification.timestamp}</p>
+                </div>
+                <button onclick="acknowledgeNotification(${notification.id})" class="ml-4 bg-white text-red-500 px-2 py-1 rounded">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.getElementById('notifications').appendChild(notificationElement);
+        }
+
+        function acknowledgeNotification(notificationId) {
+            fetch(`/api/notifications/${notificationId}/acknowledge/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => {
+                if (response.ok) {
+                    const notification = document.querySelector(`[data-notification-id="${notificationId}"]`);
+                    notification.remove();
+                }
+            });
+        }
+
+        function updateTables() {
+            fetch('/api/statuses/')
+                .then(response => response.json())
+                .then(statuses => {
+                    const statusTableBody = document.querySelector('table:first-of-type tbody');
+                    const messageTableBody = document.querySelector('table:last-of-type tbody');
+                    
+                    // Update status tabel
+                    statusTableBody.innerHTML = statuses.map(status => `
+                        <tr class="${body.classList.contains('light-mode') ? 'hover-light' : 'hover-dark'}">
+                            <td class="py-2 px-4">${status.status ? 'Aan' : 'Uit'}</td>
+                            <td class="py-2 px-4">${status.timestamp}</td>
+                        </tr>
+                    `).join('');
+                    
+                    // Update berichten tabel
+                    messageTableBody.innerHTML = statuses.map(status => `
+                        <tr class="${body.classList.contains('light-mode') ? 'hover-light' : 'hover-dark'}">
+                            <td class="py-2 px-4">${status.message}</td>
+                            <td class="py-2 px-4">${status.device_id}</td>
+                        </tr>
+                    `).join('');
+                });
+        }
+
+        // Uitgeschakeld voor testen
+        // setInterval(checkNotifications, 30000);
+        // Check direct bij het laden van de pagina
+        // checkNotifications();
+
+        // Update de tabellen elke 5 seconden
+        setInterval(updateTables, 5000);
+        // Update direct bij het laden van de pagina
+        updateTables();
     </script>
 </body>
 </html>

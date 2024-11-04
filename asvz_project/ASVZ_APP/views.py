@@ -34,16 +34,25 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'statuses': statuses})
 
 def get_statuses(request):
-    statuses = SondepompStatus.objects.all()
-    data = [
-        {
-            'status': status.status,
-            'timestamp': status.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-            'message': status.message,
-            'device_id': status.device_id
+    json_file_path = os.path.join(settings.BASE_DIR, 'ASVZ_APP', 'mockdata', 'mock_data.json')
+    
+    if not os.path.exists(json_file_path):
+        raise FileNotFoundError(f"Het bestand {json_file_path} bestaat niet.")
+
+    with open(json_file_path) as f:
+        mock_data = json.load(f)
+
+    data = []
+    for item in mock_data:
+        timestamp = datetime.fromisoformat(item['timestamp'].replace("Z", "+00:00"))
+        status = {
+            'status': item['status'],
+            'timestamp': timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+            'message': item['message'],
+            'device_id': item['device_id']
         }
-        for status in statuses
-    ]
+        data.append(status)
+
     return JsonResponse(data, safe=False)
 
 def login_view(request):
@@ -71,3 +80,33 @@ def register(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def get_notifications(request):
+    json_file_path = os.path.join(settings.BASE_DIR, 'ASVZ_APP', 'mockdata', 'mock_data.json')
+    
+    if not os.path.exists(json_file_path):
+        raise FileNotFoundError(f"Het bestand {json_file_path} bestaat niet.")
+
+    with open(json_file_path) as f:
+        mock_data = json.load(f)
+
+    # Filter alleen de foutmeldingen
+    notifications = [
+        {
+            'id': idx,
+            'message': item['message'],
+            'timestamp': datetime.fromisoformat(item['timestamp'].replace("Z", "+00:00")).strftime("%Y-%m-%d %H:%M:%S"),
+            'device_id': item['device_id']
+        }
+        for idx, item in enumerate(mock_data)
+        if "fout" in item['message'].lower() or "error" in item['message'].lower()
+    ]
+    
+    return JsonResponse(notifications, safe=False)
+
+@login_required
+def acknowledge_notification(request, notification_id):
+    if request.method == 'POST':
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)
