@@ -34,5 +34,21 @@
         "timestamp": "2024-10-14T10:25:00Z",
         "message": "Systeem afgesloten",
         "device_id": "Device123"
+    },
+    {
+        "status": true,
+        "timestamp": "2024-10-14T10:00:00Z",
+        "message": "Systeem gestart",
+        "device_id": "Device123",
+        "status_type": "INFO",
+        "is_acknowledged": false
+    },
+    {
+        "status": false,
+        "timestamp": "2024-10-14T10:15:00Z",
+        "message": "Fout opgetreden",
+        "device_id": "Device456",
+        "status_type": "ERROR",
+        "is_acknowledged": false
     }
 ]

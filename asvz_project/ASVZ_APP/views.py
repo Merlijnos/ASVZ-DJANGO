@@ -36,9 +36,6 @@ def dashboard(request):
 def get_statuses(request):
     json_file_path = os.path.join(settings.BASE_DIR, 'ASVZ_APP', 'mockdata', 'mock_data.json')
     
-    if not os.path.exists(json_file_path):
-        raise FileNotFoundError(f"Het bestand {json_file_path} bestaat niet.")
-
     with open(json_file_path) as f:
         mock_data = json.load(f)
 
@@ -49,7 +46,9 @@ def get_statuses(request):
             'status': item['status'],
             'timestamp': timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             'message': item['message'],
-            'device_id': item['device_id']
+            'device_id': item['device_id'],
+            'status_type': item.get('status_type', 'INFO'),
+            'is_acknowledged': item.get('is_acknowledged', False)
         }
         data.append(status)
 

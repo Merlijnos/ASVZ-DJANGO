@@ -65,6 +65,11 @@
         <h1 class="text-4xl mb-6 text-center">Sondepomp Dashboard</h1>
         
         <div class="mb-4 flex justify-between items-center">
+            {% if user.is_staff %}
+            <a href="{% url 'admin:ASVZ_APP_sondepompstatus_changelist' %}" class="button">
+                <i class="fas fa-cog"></i> Beheer Sondepompen
+            </a>
+            {% endif %}
             <a href="{% url 'logout' %}" class="button">
                 <i class="fas fa-sign-out-alt"></i> Uitloggen
             </a>
